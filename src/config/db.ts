@@ -1,6 +1,7 @@
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
+import logger from "../logger";
 
-export default () => {
+export const connentDB = () => {
   const { DB_USER, DB_PASSWORD, DB_HOST, DB_LOCAL_PORT, DB_DATABASE } =
     process.env;
   const url = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_LOCAL_PORT}/${DB_DATABASE}?authSource=admin`;
@@ -9,6 +10,6 @@ export default () => {
   const db = mongoose.connection;
   db.on("error", console.error.bind(console, "connection error: "));
   db.once("open", function () {
-    console.log("Connected successfully");
+    logger.info("Connected successfully");
   });
 };

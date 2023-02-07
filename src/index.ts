@@ -1,24 +1,21 @@
-import mongoose, { ConnectOptions } from "mongoose";
-import express from "express";
-import logger from "./logger";
-import connection from "./connection";
 import dotenv from "dotenv";
+import express from "express";
+import routes from "./routes/email";
+import cors from "cors";
+import { protectedRoute } from "./middleware/protected";
+import logger from "./logger";
+import { connentDB } from "./config/db";
+
 dotenv.config();
-const PORT = process.env.NODE_DOCKER_PORT || 5000;
+const PORT = process.env.NODE_DOCKER_PORT || 8080;
 
 const app = express();
+connentDB();
 app.use(express.json());
-connection();
-
-app.get("/", (req, res) => {
-  logger.info("hello world");
-  logger.error("hello world");
-  logger.warn("hello world");
-  logger.fatal("hello world");
-
-  res.status(200).send("hello world");
-});
+app.use(protectedRoute);
+app.use(cors());
+app.use("/api/v1", routes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
+  logger.info(`Server running on port: ${PORT}`);
 });
