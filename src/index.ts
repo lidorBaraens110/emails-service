@@ -1,12 +1,15 @@
+import mongoose, { ConnectOptions } from "mongoose";
 import express from "express";
 import logger from "./logger";
-import { lookup } from "dns";
-
-const PORT = 3000;
+import connection from "./connection";
+import dotenv from "dotenv";
+dotenv.config();
+const PORT = process.env.NODE_DOCKER_PORT || 5000;
 
 const app = express();
+app.use(express.json());
+connection();
 
-// add pino
 app.get("/", (req, res) => {
   logger.info("hello world");
   logger.error("hello world");
